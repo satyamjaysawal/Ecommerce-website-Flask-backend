@@ -73,3 +73,10 @@ def custom_openapi():
 
 # Override the OpenAPI schema
 app.openapi = custom_openapi
+
+
+# Start the Uvicorn server with the correct port
+if __name__ == "__main__":
+    # Get the PORT environment variable, or default to 8000 if not set
+    port = int(os.getenv("PORT", 8000))  # Get the port from environment variable or fallback to 8000
+    uvicorn.run(app, host="0.0.0.0", port=port)
