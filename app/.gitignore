@@ -1,0 +1,31 @@
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environment directories
+venv/
+env/
+.venv/
+
+# Ignore environment variable files
+.env
+
+# Ignore IDE/editor config files
+.vscode/
+.idea/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore test coverage and other related files
+coverage/
+*.coverage
+*.coveragerc
+
+# Ignore database files (if using SQLite)
+*.sqlite3

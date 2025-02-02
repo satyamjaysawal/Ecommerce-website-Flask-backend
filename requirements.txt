@@ -1,0 +1,9 @@
+fastapi
+sqlalchemy
+pydantic
+passlib
+pyjwt
+psycopg2
+python-dotenv
+razorpay
+pytz
