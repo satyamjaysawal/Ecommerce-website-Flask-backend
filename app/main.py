@@ -6,9 +6,11 @@ from app.routers import auth, product, user, cart, order, sales, review, payment
 
 import os
 from dotenv import load_dotenv
+import uvicorn  # <-- Missing import for uvicorn
 
 # Load environment variables from .env file
 load_dotenv()
+
 # Initialize FastAPI
 app = FastAPI()
 
@@ -38,9 +40,6 @@ app.include_router(payment.router, prefix="/payment", tags=["Payment"])
 
 app.include_router(shipment.router, prefix="/shipment", tags=["Shipment"])  # ✅ Added shipment router 
 app.include_router(sales.router, prefix="/sales", tags=["Sales Analysis"])
-
-
-
 
 # Create tables on startup
 @app.on_event("startup")
@@ -74,9 +73,8 @@ def custom_openapi():
 # Override the OpenAPI schema
 app.openapi = custom_openapi
 
-
 # Start the Uvicorn server with the correct port
 if __name__ == "__main__":
     # Get the PORT environment variable, or default to 8000 if not set
     port = int(os.getenv("PORT", 8000))  # Get the port from environment variable or fallback to 8000
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port)  # Start the app on 0.0.0.0 and specified port
