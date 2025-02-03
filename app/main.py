@@ -70,8 +70,8 @@ def custom_openapi():
 # Override the OpenAPI schema
 app.openapi = custom_openapi
 
-# ✅ Force Uvicorn to Bind to 0.0.0.0 and Use Render's Assigned Port
+# ✅ Explicitly Bind to 0.0.0.0 and Use Render's Assigned Port
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 10000))  # Fetch Render-assigned PORT or use 10000 as fallback
+    port = int(os.environ.get("PORT", 8000))  # Use PORT from environment, fallback to 8000
     print(f"🚀 Starting server on 0.0.0.0:{port} ...")  # Debugging output
-    uvicorn.run(app, host="0.0.0.0", port=port)  # Explicitly bind to 0.0.0.0
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=False)  # Bind to 0.0.0.0
