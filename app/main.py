@@ -1,12 +1,11 @@
+import os
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from app.database import engine, Base
 from app.routers import auth, product, user, cart, order, sales, review, payment, shipment
-
-import os
 from dotenv import load_dotenv
-import uvicorn  # <-- Missing import for uvicorn
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,13 +31,11 @@ def read_root():
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(user.router, prefix="/user", tags=["Users"])
 app.include_router(product.router, prefix="/product", tags=["Products"])
-app.include_router(review.router, prefix="/reviews", tags=["Reviews"])  # ✅ Added review router
+app.include_router(review.router, prefix="/reviews", tags=["Reviews"])  
 app.include_router(cart.router, prefix="/cart", tags=["Cart"])
-# app.include_router(cart.router, prefix="/wishlist", tags=["Wishlist"])
 app.include_router(order.router, prefix="/orders", tags=["Orders"])
 app.include_router(payment.router, prefix="/payment", tags=["Payment"])
-
-app.include_router(shipment.router, prefix="/shipment", tags=["Shipment"])  # ✅ Added shipment router 
+app.include_router(shipment.router, prefix="/shipment", tags=["Shipment"])  
 app.include_router(sales.router, prefix="/sales", tags=["Sales Analysis"])
 
 # Create tables on startup
@@ -73,8 +70,8 @@ def custom_openapi():
 # Override the OpenAPI schema
 app.openapi = custom_openapi
 
-# Start the Uvicorn server with the correct port
+# ✅ Force Uvicorn to Bind to 0.0.0.0 and Use Render's Assigned Port
 if __name__ == "__main__":
-    # Get the PORT environment variable, or default to 8000 if not set
-    port = int(os.getenv("PORT", 8000))  # Get the port from environment variable or fallback to 8000
-    uvicorn.run(app, host="0.0.0.0", port=port)  # Start the app on 0.0.0.0 and specified port
+    port = int(os.getenv("PORT", 10000))  # Fetch Render-assigned PORT or use 10000 as fallback
+    print(f"🚀 Starting server on 0.0.0.0:{port} ...")  # Debugging output
+    uvicorn.run(app, host="0.0.0.0", port=port)  # Explicitly bind to 0.0.0.0
