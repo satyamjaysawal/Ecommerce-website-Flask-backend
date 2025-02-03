@@ -7,27 +7,23 @@ from app.database import engine, Base
 from app.routers import auth, product, user, cart, order, sales, review, payment, shipment
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Initialize FastAPI
+
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+
 app = FastAPI()
 
-# ✅ Implement CORS Middleware
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("FRONTEND_URL", "http://localhost:5173")], 
-    # allow_origins=[
-    #     "http://localhost:5173",  # Local development frontend URL
-    #     os.getenv("FRONTEND_URL")  # Production frontend URL (from environment variable)
-    # ],
-
+    allow_origins=[FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
 )
 
-# Home route to check if the server is running
 @app.get("/")
 def read_root():
     return {"message": "Server is running!"}
