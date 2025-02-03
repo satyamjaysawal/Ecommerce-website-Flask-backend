@@ -28,9 +28,9 @@ app.add_middleware(
 )
 
 # Home route to check if the server is running
-# @app.get("/")
-# def read_root():
-#     return {"message": "Server is running!"}
+@app.get("/")
+def read_root():
+    return {"message": "Server is running!"}
 
 # Include Routers
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
