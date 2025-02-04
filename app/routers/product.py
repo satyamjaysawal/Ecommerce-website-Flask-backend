@@ -13,27 +13,30 @@ IST = pytz.timezone("Asia/Kolkata")
 router = APIRouter()
 
 
-@router.get("/admin/products/analysis", response_model=list[ProductWithReviewsResponse])
+@router.get("/admin-product-analysis", response_model=list[ProductWithReviewsResponse])
 def get_products_for_analysis(
     db: Session = Depends(get_db),
     authorization: str = Header(None),
 ):
-    """
-    Admin can retrieve detailed product analysis including reviews, ratings, and product information.
-    - Only accessible by admins.
-    """
-    # Decode JWT token and get user role
+    print("Received request for /admin-product-analysis")  # Debugging log
     token_data = decode_access_token(authorization.split("Bearer ")[-1])
+    print("Decoded Token Data:", token_data)  # Debugging log
+    
     if token_data["role"] != "admin":
+        print("Permission denied. Admins only.")  # Debugging log
         raise HTTPException(status_code=403, detail="Permission denied. Admins only.")
     
     # Fetch products along with reviews and ratings for analysis
     products = get_all_products_with_reviews(db)
+    print("Fetched Products for Analysis:", products)  # Debugging log
     
     if not products:
         raise HTTPException(status_code=404, detail="No products found for analysis.")
-
+    
     return products
+
+
+
 
 
 @router.post("/products", response_model=ProductResponse)
