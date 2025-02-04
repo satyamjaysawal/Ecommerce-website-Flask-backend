@@ -3,10 +3,68 @@ from app.models import Product, User
 from app.schemas import ProductCreate
 from datetime import datetime
 from fastapi import HTTPException
-
+from sqlalchemy import func
+from app.models import Review
 import pytz
 
 IST = pytz.timezone("Asia/Kolkata")
+
+def get_all_products_with_reviews(db: Session):
+    """
+    Fetch all products with their reviews, ratings, and other details for analysis.
+    This function fetches products and calculates the average ratings.
+    """
+    print("🔍 [DEBUG] Fetching all products from the database...")
+
+    # Fetching all products
+    products = db.query(Product).all()
+    print(f"✅ [DEBUG] Found {len(products)} products.")
+
+    product_details = []
+    
+    for product in products:
+        print(f"🔍 [DEBUG] Processing product ID: {product.id} - {product.name}")
+
+        # Fetch the reviews for this product
+        reviews = db.query(Review).filter(Review.product_id == product.id).all()
+        print(f"✅ [DEBUG] Found {len(reviews)} reviews for product ID {product.id}.")
+
+        # Calculate the average rating if there are reviews
+        if reviews:
+            total_rating = sum([review.rating for review in reviews])
+            avg_rating = total_rating / len(reviews)
+            print(f"✅ [DEBUG] Calculated average rating: {avg_rating} for product {product.name}.")
+        else:
+            avg_rating = 0.0
+            print(f"❌ [DEBUG] No reviews found for product {product.name}. Setting average rating to 0.0.")
+
+        # Prepare the product data with its reviews
+        product_data = {
+            "id": product.id,
+            "name": product.name,
+            "category": product.category,
+            "price_before_discount": product.price_before_discount,
+            "price_after_discount": product.price_after_discount,
+            "stock_remaining": product.stock_remaining,
+            "product_rating": avg_rating,
+            "reviews": [
+                {
+                    "id": review.id,  # Add review ID
+                    "user_id": review.user_id,
+                    "product_id": review.product_id,  # Add product_id
+                    "rating": review.rating,
+                    "comment": review.comment,
+                    "created_at": review.created_at,  # Add created_at
+                }
+                for review in reviews
+            ],
+        }
+
+        product_details.append(product_data)
+        print(f"✅ [DEBUG] Added product data for {product.name}.")
+
+    print(f"✅ [DEBUG] Returning {len(product_details)} products with reviews.")
+    return product_details
 
 def add_product(db: Session, product_data, vendor_id=None):
     """Add a new product with calculated fields."""

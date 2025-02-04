@@ -53,14 +53,13 @@ class Review(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"))
-    rating = Column(Float, nullable=False)  # ✅ Rating (0.0 - 5.0)
-    comment = Column(String, nullable=True)  # ✅ Optional review comment
-    created_at = Column(DateTime, default=lambda: datetime.now(IST))  # ✅ Timestamp in IST
+    rating = Column(Float, nullable=False)  # Rating between 0.0 and 5.0
+    comment = Column(String, nullable=True)  # Optional review comment
+    created_at = Column(DateTime, default=lambda: datetime.now(IST))  # Timestamp in IST
 
-    # ✅ Relationships
+    # Relationships
     user = relationship("User")
     product = relationship("Product", back_populates="reviews")
-
 
 class Cart(Base):
     __tablename__ = "carts"

@@ -1,67 +1,32 @@
-from sqlalchemy.orm import Session
-from app.models import Review, Product
-from app.schemas import ReviewResponse
-from datetime import datetime
 import pytz
+from datetime import datetime
+from sqlalchemy.orm import Session
+from app.models import Product, Review  # Make sure Review is imported
+from app.schemas import ReviewCreate
 
-# ✅ Define IST timezone globally
+# IST timezone
 IST = pytz.timezone("Asia/Kolkata")
 
-def add_review(db: Session, user_id: int, product_id: int, rating: float, comment: str = None):
+def create_review(db: Session, user_id: int, product_id: int, review_data: ReviewCreate):
     """
-    Add a new review and update the product's weighted average rating.
+    Create a new review for a product by a customer.
     """
-    current_time_ist = datetime.now().astimezone(IST)  # ✅ Convert timestamp to IST
-
-    new_review = Review(
+    # Create a new review instance with timestamp in IST
+    review = Review(
         user_id=user_id,
         product_id=product_id,
-        rating=rating,
-        comment=comment,
-        created_at=current_time_ist  # ✅ Store IST timestamp
+        rating=review_data.rating,
+        comment=review_data.comment,
+        created_at=datetime.now(IST),  # Use IST for timestamp
     )
-
-    db.add(new_review)
+    db.add(review)
     db.commit()
-    db.refresh(new_review)
+    db.refresh(review)
+    return review
 
-    # ✅ Update product rating using weighted average
-    update_product_rating(db, product_id)
-
-    return new_review
-
-def get_reviews_by_product(db: Session, product_id: int):
+def get_reviews_for_product(db: Session, product_id: int):
     """
-    Retrieve all reviews for a given product, sorted by newest first.
+    Fetch all reviews for a product.
     """
-    return db.query(Review).filter(Review.product_id == product_id).order_by(Review.created_at.desc()).all()
+    return db.query(Review).filter(Review.product_id == product_id).all()
 
-def update_product_rating(db: Session, product_id: int):
-    """
-    Update the product's rating using a weighted average approach.
-    """
-    reviews = db.query(Review).filter(Review.product_id == product_id).all()
-
-    if not reviews:
-        return 0.0  # No reviews, set rating to 0.0
-
-    total_weight = 0
-    weighted_sum = 0
-
-    for review in reviews:
-        weight = 1  # Default weight
-        if review.rating >= 4:
-            weight = 2  # Higher weight for positive reviews
-
-        weighted_sum += review.rating * weight
-        total_weight += weight
-
-    weighted_avg = round(weighted_sum / total_weight, 2) if total_weight > 0 else 0.0
-
-    # ✅ Update the product rating
-    product = db.query(Product).filter(Product.id == product_id).first()
-    if product:
-        product.product_rating = weighted_avg
-        db.commit()
-
-    return weighted_avg

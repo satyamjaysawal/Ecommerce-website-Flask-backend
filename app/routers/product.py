@@ -2,14 +2,39 @@ from fastapi import APIRouter, Depends, HTTPException, Header, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from typing import List
-from app.schemas import ProductCreate, ProductResponse
+from app.schemas import ProductCreate, ProductResponse, ProductWithReviewsResponse
 from app.crud.product import (
-    add_product, get_products, get_product_by_id, update_product, soft_delete_product, search_products_by_name, get_products_by_category, get_products_by_rating, import_products
+  get_all_products_with_reviews , add_product, get_products, get_product_by_id, update_product, soft_delete_product, search_products_by_name, get_products_by_category, get_products_by_rating, import_products
 )
 from app.utils import decode_access_token
 import pytz
+from app.models import Review
 IST = pytz.timezone("Asia/Kolkata")
 router = APIRouter()
+
+
+@router.get("/admin/products/analysis", response_model=list[ProductWithReviewsResponse])
+def get_products_for_analysis(
+    db: Session = Depends(get_db),
+    authorization: str = Header(None),
+):
+    """
+    Admin can retrieve detailed product analysis including reviews, ratings, and product information.
+    - Only accessible by admins.
+    """
+    # Decode JWT token and get user role
+    token_data = decode_access_token(authorization.split("Bearer ")[-1])
+    if token_data["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Permission denied. Admins only.")
+    
+    # Fetch products along with reviews and ratings for analysis
+    products = get_all_products_with_reviews(db)
+    
+    if not products:
+        raise HTTPException(status_code=404, detail="No products found for analysis.")
+
+    return products
+
 
 @router.post("/products", response_model=ProductResponse)
 def create_product(

@@ -82,8 +82,22 @@ class ReviewResponse(BaseModel):
 class ProductReviewsResponse(BaseModel):
     product_id: int
     weighted_average_rating: float
+    reviews: list[ReviewResponse]
+
+    class Config:
+        from_attributes = True
+class ProductWithReviewsResponse(BaseModel):
+    id: int
+    name: str
+    category: str
+    price_before_discount: float
+    price_after_discount: float
+    stock_remaining: int
+    product_rating: float
     reviews: List[ReviewResponse]
 
+    class Config:
+        from_attributes = True
 class PurchaseProduct(BaseModel):
     quantity: int
 
