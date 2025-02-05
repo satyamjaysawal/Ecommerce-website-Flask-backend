@@ -599,7 +599,7 @@ def remove_product(
     authorization: str = Header(None),
 ):
     """
-    Soft delete a product by marking it as inactive and setting the deleted_at timestamp.
+    Soft delete a product by marking it  inactive and setting the deleted_at timestamp.
     - Only **admins** or the **vendor who owns the product** can delete it.
     """
     token_data = decode_access_token(authorization.split("Bearer ")[-1])
