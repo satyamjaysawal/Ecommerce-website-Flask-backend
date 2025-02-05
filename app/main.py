@@ -10,9 +10,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
-# FRONTEND_URL='http://localhost:5173'
+FRONTEND_URL='http://localhost:5173'
 
 app = FastAPI()
 
