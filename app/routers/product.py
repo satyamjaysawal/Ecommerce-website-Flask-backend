@@ -592,7 +592,7 @@ def edit_product(
 
     return update_product(db, product, product_data)
 
-@router.delete("/products/{product_id}")
+@router.delete("/products/{product_id}/delete")
 def remove_product(
     product_id: int,
     db: Session = Depends(get_db),
