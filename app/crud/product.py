@@ -104,26 +104,24 @@ def add_product(db: Session, product_data, vendor_id=None):
     return new_product
 
 
-
-def get_products(db: Session, user_role: str, skip: int = 0, limit: int = 10):
+def get_products(db: Session, user_role: str):
     """
     Fetch all products with role-based filtering.
     - Customers see only active products.
     - Admins & vendors see all products.
-    - Supports pagination.
     """
     query = db.query(Product)
+    
     # ✅ Customers see only active products
     if user_role == "customer":
         query = query.filter(Product.is_active == True)
-    # ✅ Apply pagination
-    products = query.offset(skip).limit(limit).all()
+    
+    # ✅ Fetch all products without pagination
+    products = query.all()
     return products
 
 
-# def get_product_by_id(db: Session, product_id: int):
-#     """Fetch a product by its ID."""
-#     return db.query(Product).filter(Product.id == product_id).first()
+
 
 def get_product_by_id(db: Session, product_id: int):
     """Fetch a product by its ID."""

@@ -290,15 +290,8 @@ def filter_products_by_rating(
 
 
 
-
-
-
-
-
 @router.get("/products", response_model=list[dict])
 def list_all_products(
-    skip: int = Query(0, ge=0, description="Number of products to skip for pagination"),
-    limit: int = Query(10, ge=1, le=100, description="Number of products to fetch (max 100)"),
     db: Session = Depends(get_db),
     authorization: str = Header(None),
 ):
@@ -306,7 +299,6 @@ def list_all_products(
     List all products with role-based filtering.
     - Customers see only active products.
     - Admins & vendors see all products.
-    - Supports pagination with `skip` and `limit`.
     """
     print("🔄 [API CALL] Fetching products...")
 
@@ -323,7 +315,7 @@ def list_all_products(
     print(f"✅ [USER ROLE] {user_role} is accessing products.")
 
     # ✅ Fetch products based on user role
-    products = get_products(db, user_role, skip, limit)
+    products = get_products(db, user_role)
 
     if not products:
         raise HTTPException(status_code=404, detail="No products found.")
@@ -364,6 +356,7 @@ def list_all_products(
 
     print(f"✅ [SUCCESS] Returning {len(product_list)} products.")
     return product_list
+
 
 
 
