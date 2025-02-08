@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from app.database import engine, Base
+from fastapi.responses import FileResponse
 from app.routers import auth, product, user, cart, order, sales, review, payment, shipment
 from dotenv import load_dotenv
 
@@ -71,6 +72,14 @@ def custom_openapi():
 
 # Override the OpenAPI schema
 app.openapi = custom_openapi
+
+# ✅ Catch-All Route for React Router (Fixes Page Reload Issues)
+@app.get("/{full_path:path}")
+def catch_all(full_path: str):
+    index_path = os.path.join("frontend", "dist", "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return {"error": "Page not found"}
 
 # # ✅ Explicitly Bind to 0.0.0.0 and Use Render's Assigned Port
 # if __name__ == "__main__":
