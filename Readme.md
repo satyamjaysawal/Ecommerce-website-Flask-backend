@@ -69,3 +69,113 @@ List of all the API URLs:
 ### 9. **Payment**
 - `POST /payment/create-order`
 - `POST /payment/confirm-payment`
+
+
+
+## Installation
+
+To run this project locally, follow the steps below:
+
+### Backend Setup (FastAPI)
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/your-repository-url.git
+   cd your-repository-directory
+   ```
+
+2. Create a Python virtual environment:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Set up the environment variables:
+   - **DATABASE_URL**: PostgreSQL connection URL
+   - **SECRET_KEY**: A secure key for JWT token encoding
+   - **RAZORPAY_API_KEY**: API key for Razorpay
+
+   Example `.env` file:
+   ```
+   DATABASE_URL=postgresql://user:password@localhost/ecommerce_db
+   DATABASE_URL=postgresql://xxxxxxxxxxxxxxxxxxxxxxxxxxxx?sslmode=require
+   FRONTEND_URL=https://ecommerce-website-reactjs-vite-frontend.onrender.com
+   FRONTEND_URL=http://localhost:5173
+   PORT=8080
+   RAZORPAY_API_KEY=your_razorpay_api_key
+   ```
+
+5. Start the backend server:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+
+### Frontend Setup (React)
+1. Navigate to the frontend folder:
+   ```bash
+   cd frontend
+   ```
+
+2. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+### Database Setup
+Ensure you have a PostgreSQL database running. You can use Docker to set up the database easily:
+```bash
+docker-compose up -d
+```
+
+This will start the PostgreSQL container.
+
+### Docker Setup
+You can use Docker to run both the frontend and backend services in containers. The project contains a `docker-compose.yml` file to handle both services.
+
+To run the project using Docker:
+```bash
+docker-compose up --build
+```
+
+## Deployment
+
+The frontend of the project has been deployed and is accessible through the following URL:
+[**E-Commerce Website**](https://ecommerce-website-reactjs-vite-frontend.onrender.com)
+
+## API Documentation
+
+The API follows a RESTful design and provides endpoints for product management, user authentication, order management, and more.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+****
+****
+
+
+
