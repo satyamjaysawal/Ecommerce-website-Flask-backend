@@ -1,0 +1,4 @@
+DATABASE_URL=postgresql://xxxxxxxxxxxxxxxxxxxxxxxxxxxx?sslmode=require
+# FRONTEND_URL=https://ecommerce-website-reactjs-vite-frontend.onrender.com
+FRONTEND_URL=http://localhost:5173
+PORT=8080
