@@ -129,6 +129,10 @@ To run this project locally, follow the steps below:
    ```bash
    npm start
    ```
+```
+# REACT_APP_API_BASE_URL="http://127.0.0.1:8000"
+# REACT_APP_API_BASE_URL='https://ecommerce-website-flask-backend.onrender.com'
+```
 
 ### Database Setup
 Ensure you have a PostgreSQL database running. You can use Docker to set up the database easily:
